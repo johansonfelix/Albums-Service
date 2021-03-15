@@ -17,14 +17,15 @@ import java.util.Map;
 @Path("album")
 public class AlbumRest{
 
-    private static Albums albums = new Albums();
+    private static Albums albums = Albums.getAlbumsInstance();
 
 
     @Path("createAlbum")
     @POST
-    @Consumes("application/json")
-    @Produces("text/plain")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.TEXT_PLAIN})
     public Response createNewAlbum(Album album) {
+
         String response = albums.createAlbum(album);
         try {
             if (response.contains("CREATED")) {
@@ -108,20 +109,19 @@ public class AlbumRest{
 
     }
 
-    @Path("getAlbum")
+    @Path("getAlbum/{ISRC}")
     @GET
-    @Consumes("application/json")
     @Produces("application/json")
-    public Response getAlbum(Album album){
+    public Response getAlbum(@PathParam("ISRC") String ISRC){
 
         try{
-            Album info = albums.getAlbumInfo(album.getISRC());
+            Album info = albums.getAlbumInfo(ISRC);
 
             if(info == null)
                 throw new RepException("Album does not exist");
             else {
 
-                return Response.ok(album, MediaType.APPLICATION_JSON).build();
+                return Response.ok(info, MediaType.APPLICATION_JSON).build();
             }
         }
         catch (RepException e){
