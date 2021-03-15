@@ -23,11 +23,12 @@ public class AlbumRest{
     @Path("createAlbum")
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.TEXT_PLAIN})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response createNewAlbum(Album album) {
 
-        String response = albums.createAlbum(album);
+
         try {
+            String response = albums.createAlbum(album);
             if (response.contains("CREATED")) {
                 Gson gson = new Gson();
                 Map<String, String> map = new HashMap<>();
@@ -42,9 +43,11 @@ public class AlbumRest{
         }
         catch(RepException e) {
             Gson gson = new Gson();
-            String json = gson.toJson(e);
-            System.out.println(e.getMessage());
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.toString()).build();
+            Map<String, String> map = new HashMap<>();
+            map.put("status", "fail");
+            map.put("message", e.getMessage());
+
+            return Response.ok(gson.toJson(map)).build();
         }
 
     }
