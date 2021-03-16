@@ -125,7 +125,7 @@ public class AlbumRest{
         }
         catch (RepException e){
 
-            return null;
+            return getResponse(e);
         }
 
     }
