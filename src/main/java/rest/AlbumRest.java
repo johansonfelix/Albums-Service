@@ -1,6 +1,7 @@
 package rest;
 
 import com.Albums;
+
 import com.google.gson.Gson;
 import exceptions.RepException;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -81,9 +82,11 @@ public class AlbumRest{
         try{
             String response = albums.deleteAlbum(album.getISRC());
             if(response.contains("DELETED")) {
+
                 return getResponse(response);
             }
             else{
+
                 throw  new RepException(response);
             }
         }
@@ -96,7 +99,7 @@ public class AlbumRest{
 
     @Path("getAlbum/{ISRC}")
     @GET
-    @Produces("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getAlbum(@PathParam("ISRC") String ISRC){
 
         try{
@@ -105,12 +108,14 @@ public class AlbumRest{
             if(info == null)
                 throw new RepException("Album does not exist");
             else {
+                System.out.println(info.toString());
 
-                return Response.ok(info, MediaType.APPLICATION_JSON).build();
+                return Response.ok(info).build();
             }
         }
         catch (RepException e){
-            return getResponse(e);
+            System.out.println("here2");
+            return null;
         }
 
     }
@@ -206,16 +211,14 @@ public class AlbumRest{
     }
 
     private Response getResponse(String response) throws RepException {
-        if (response.contains("UPDATED")) {
+
             Gson gson = new Gson();
             Map<String, String> map = new HashMap<>();
             map.put("status", "success");
             map.put("message", response);
 
             return Response.ok(gson.toJson(map)).build();
-        } else {
-            throw new RepException(response);
-        }
+
     }
 
 
