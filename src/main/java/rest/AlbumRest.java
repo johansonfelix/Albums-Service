@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import exceptions.RepException;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import pojo.Album;
+import pojo.CoverImage;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -33,6 +34,9 @@ public class AlbumRest{
 
 
         try {
+            if(album.getISRC() == null)
+                throw new RepException("Invalid Album - no ISRC");
+
             String response = albums.createAlbum(album);
             if (response.contains("CREATED")) {
                 Gson gson = new Gson();
@@ -57,8 +61,14 @@ public class AlbumRest{
     @Consumes("application/json")
     @Produces("application/json")
     public Response updateAlbum(Album album) throws IOException {
-        String response = albums.updateAlbum(album);
+
+
         try{
+            if(album.getISRC() == null)
+                throw new RepException("Invalid Album - no ISRC");
+
+            String response = albums.updateAlbum(album);
+
             if (response.contains("UPDATED")){
                 return getResponse(response);
             }
@@ -114,7 +124,7 @@ public class AlbumRest{
             }
         }
         catch (RepException e){
-            System.out.println("here2");
+
             return null;
         }
 
@@ -127,9 +137,6 @@ public class AlbumRest{
         return albums.getAlbumsList();
 
     }
-
-
-
 
     @Path("deleteAlbumCover")
     @DELETE
@@ -145,7 +152,6 @@ public class AlbumRest{
 
            return getResponse(e);
         }
-
     }
 
     @Path("updateAlbumCover")
@@ -171,22 +177,23 @@ public class AlbumRest{
 
 
     }
-    /*@Path("getAlbumCover")
+    @Path("getAlbumCover")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAlbumCover(@QueryParam("ISRC") String ISRC){
 
         try{
-            byte [] bytes = albums.getAlbumCoverImage(ISRC);
+            CoverImage coverImage = albums.getAlbumCoverImage(ISRC);
 
-            if (bytes == null){
+            if (coverImage.getBase64atatchment() == null){
                 throw  new RepException("No image");
             }
             else{
                 Gson gson = new Gson();
                 Map<String, String> map = new HashMap<>();
                 map.put("status", "success");
-                map.put("cover image", Base64.getEncoder().encodeToString(bytes));
+                map.put("cover image bytes", coverImage.getBase64atatchment());
+                map.put("MIME Type", coverImage.getMimeType());
 
                 return Response.ok(gson.toJson(map)).build();
 
@@ -197,7 +204,7 @@ public class AlbumRest{
             return getResponse(e);
         }
 
-    }*/
+    }
 
     
 
