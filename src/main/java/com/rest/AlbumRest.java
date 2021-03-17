@@ -4,7 +4,6 @@ import com.Albums;
 
 import com.google.gson.Gson;
 import exceptions.RepException;
-import org.glassfish.jersey.media.multipart.FormDataParam;
 import pojo.Album;
 import pojo.CoverImage;
 
@@ -22,8 +21,6 @@ import java.util.Map;
 public class AlbumRest{
 
     private static Albums albums = Albums.getAlbumsInstance();
-
-
 
 
     @Path("createAlbum")
