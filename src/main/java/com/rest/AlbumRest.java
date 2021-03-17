@@ -82,7 +82,7 @@ public class AlbumRest{
     @Path("deleteAlbum/{ISRC}")
     @DELETE
     @Produces("application/json")
-    public Response deleteAlbum(@QueryParam("ISRC") String ISRC) {
+    public Response deleteAlbum(@PathParam("ISRC") String ISRC) {
 
 
         try{
@@ -137,7 +137,7 @@ public class AlbumRest{
     @Path("deleteAlbumCover/{ISRC}")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteAlbumCover(@QueryParam("ISRC") String ISRC){
+    public Response deleteAlbumCover(@PathParam("ISRC") String ISRC){
 
         try {
             String response = albums.deleteAlbumCoverImage(ISRC);
@@ -153,7 +153,7 @@ public class AlbumRest{
     @Path("updateAlbumCover/{ISRC}")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateAlbumCover(CoverImage image, @QueryParam("ISRC") String ISRC) {
+    public Response updateAlbumCover(CoverImage image, @PathParam("ISRC") String ISRC) {
 
         try {
 
@@ -171,7 +171,7 @@ public class AlbumRest{
     @Path("getAlbumCover/{ISRC}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAlbumCover(@QueryParam("ISRC") String ISRC){
+    public Response getAlbumCover(@PathParam("ISRC") String ISRC){
 
         try{
             CoverImage coverImage = albums.getAlbumCoverImage(ISRC);
