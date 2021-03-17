@@ -1,4 +1,4 @@
-package rest;
+package com.rest;
 
 import com.Albums;
 
@@ -82,15 +82,14 @@ public class AlbumRest{
 
     }
 
-    @Path("deleteAlbum")
-    @PUT
-    @Consumes("application/json")
+    @Path("deleteAlbum/{ISRC}")
+    @DELETE
     @Produces("application/json")
-    public Response deleteAlbum(Album album) {
+    public Response deleteAlbum(@QueryParam("ISRC") String ISRC) {
 
 
         try{
-            String response = albums.deleteAlbum(album.getISRC());
+            String response = albums.deleteAlbum(ISRC);
             if(response.contains("DELETED")) {
 
                 return getResponse(response);
@@ -138,7 +137,7 @@ public class AlbumRest{
 
     }
 
-    @Path("deleteAlbumCover")
+    @Path("deleteAlbumCover/{ISRC}")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteAlbumCover(@QueryParam("ISRC") String ISRC){
@@ -154,30 +153,25 @@ public class AlbumRest{
         }
     }
 
-    @Path("updateAlbumCover")
-    @POST
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response updateAlbumCover( @FormDataParam("file") InputStream uploadedInputStream, @FormDataParam("ISRC") String ISRC) {
+    @Path("updateAlbumCover/{ISRC}")
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateAlbumCover(CoverImage image, @QueryParam("ISRC") String ISRC) {
 
         try {
-            byte[] buffer = new byte[uploadedInputStream.available()];
-            int bytesRead;
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            while ((bytesRead = uploadedInputStream.read(buffer)) != -1) {
-                output.write(buffer, 0, bytesRead);
-            }
-            String response = albums.updateAlbumCoverImage(ISRC, output.toByteArray());
+
+            String response = albums.updateAlbumCoverImage(ISRC, image);
 
             return getResponse(response);
 
-        } catch (RepException | IOException e) {
+        } catch (RepException e) {
             return getResponse(e);
 
         }
 
 
     }
-    @Path("getAlbumCover")
+    @Path("getAlbumCover/{ISRC}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAlbumCover(@QueryParam("ISRC") String ISRC){
