@@ -3,6 +3,8 @@ package rest;
 import com.Albums;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import org.json.*;
 import exceptions.RepException;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import pojo.Album;
@@ -86,11 +88,11 @@ public class AlbumRest{
     @PUT
     @Consumes("application/json")
     @Produces("application/json")
-    public Response deleteAlbum(Album album) {
-
-
+    public Response deleteAlbum(String jsonData) {
         try{
-            String response = albums.deleteAlbum(album.getISRC());
+            JSONObject jsonObj = new JSONObject(jsonData);
+            String ISRC = jsonObj.getString("ISRC");
+            String response = albums.deleteAlbum(ISRC);
             if(response.contains("DELETED")) {
 
                 return getResponse(response);
@@ -100,7 +102,7 @@ public class AlbumRest{
                 throw  new RepException(response);
             }
         }
-        catch (RepException e){
+        catch (RepException | JSONException e){
             return getResponse(e);
 
         }
