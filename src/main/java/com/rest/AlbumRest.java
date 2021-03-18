@@ -7,6 +7,7 @@ import exceptions.RepException;
 import pojo.Album;
 import pojo.CoverImage;
 
+import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -153,8 +154,9 @@ public class AlbumRest{
     @Path("updateAlbumCover/{ISRC}")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateAlbumCover(CoverImage image, @PathParam("ISRC") String ISRC) {
-
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateAlbumCover(@PathParam("ISRC") String ISRC, CoverImage image) {
+        System.out.println("Called updateAlbumCover func: Updating " + image.toString());
         try {
 
             String response = albums.updateAlbumCoverImage(ISRC, image);
@@ -196,9 +198,6 @@ public class AlbumRest{
         }
 
     }
-
-    
-
     private Response getResponse(Exception e) {
         Gson gson = new Gson();
         Map<String, String> map = new HashMap<>();
